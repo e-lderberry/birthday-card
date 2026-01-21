@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Birthday Card Generator 🎉</title>
+<style>
+    body {
+        margin: 0;
+        font-family: 'Comic Sans MS', cursive, sans-serif;
+        background: #fff8f0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 40px 20px;
+    }
+
+    h1 {
+        color: #ff6f61;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .lang-switch {
+        position: fixed;
+        top: 15px;
+        right: 20px;
+        display: flex;
+        gap: 10px;
+    }
+
+    .lang-switch button {
+        padding: 6px 12px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+        background: #ffd6d0;
+    }
+
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 50px;
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    form {
+        background: #fff3f0;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        min-width: 280px;
+    }
+
+    input {
+        padding: 13px;
+        font-size: 1.3rem;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+    button {
+        padding: 13px;
+        font-size: 1.2rem;
+        border-radius: 5px;
+        background: #ff6f61;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .secondary {
+        background: #ffd6a5;
+        color: #333;
+    }
+
+    .card {
+        width: 680px;
+        height: 380px;
+        border-radius: 15px;
+        background: #fffefc;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        display: none;
+        display: flex;
+        overflow: hidden;
+    }
+
+    .card-left, .card-right {
+        width: 50%;
+        padding: 25px;
+        box-sizing: border-box;
+    }
+
+    .card-left {
+        background: #ffe6e6;
+        border-right: 2px solid #ffb4a2;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-style: italic;
+        color: #ff6f61;
+        font-size: 1.4rem;
+        text-align: center;
+    }
+
+    .card-right {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        gap: 15px;
+    }
+
+    .cake-icon {
+        width: 104px;
+        height: 104px;
+    }
+
+    #cardMessage {
+        font-size: 1.6rem;
+        line-height: 1.4;
+        padding: 0 20px;
+    }
+</style>
+</head>
+<body>
+
+<div class="lang-switch">
+    <button onclick="setLang('ru')">RU</button>
+    <button onclick="setLang('en')">EN</button>
+</div>
+
+<h1 id="title">Генератор смешных открыток 🎉</h1>
+
+<div class="container">
+    <form id="birthdayForm">
+        <input type="text" id="name">
+        <input type="text" id="adjective">
+        <input type="number" id="age">
+        <input type="text" id="hobby">
+        <button type="button" id="luckyButton" class="secondary"></button>
+        <button type="submit" id="generateButton"></button>
+    </form>
+
+    <div class="card" id="card">
+        <div class="card-left" id="cardLeftText"></div>
+        <div class="card-right">
+            <img src="cake_icon.jpg" class="cake-icon">
+            <div id="cardMessage"></div>
+            <button id="copyButton" class="secondary"></button>
+        </div>
+    </div>
+</div>
+
+<script>
+    
+const nameInput = document.getElementById("name");
+const adjectiveInput = document.getElementById("adjective");
+const ageInput = document.getElementById("age");
+const hobbyInput = document.getElementById("hobby");
+
+const translations = {
+    ru: {
+        title: "Генератор смешных открыток 🎉",
+        name: "Имя",
+        adjective: "Прилагательное (например: великолепный)",
+        age: "Возраст",
+        hobby: "Хобби (необязательно)",
+        lucky: "🎲 Повезёт!",
+        generate: "Сгенерировать",
+        copy: "Скопировать",
+        leftCard: "Особенный день для особенного человека!",
+        names: ["Дружище", "Чемпион", "Звезда", "Легенда", "Герой"],
+        adjectives: ["потрясающий", "легендарный", "великолепный", "офигенный", "шикарный"],
+        hobbies: ["есть торт", "танцевать", "веселиться", "праздновать", "отрываться"],
+        ages: [18, 21, 25, 30, 35, 40, 50, 99],
+        messages: [
+            "С днём рождения, ты {adj} {name}! Тебе {age} лет — это мощь!",
+            "{name}, ты просто {adj}! {age} тебе очень идёт!",
+            "С каждым годом ты всё более {adj}! Поздравляю с {age}-летием!",
+            "С днём рождения самого {adj} человека на планете!",
+            "{name}, тебе {age}, и ты всё ещё невероятно {adj}!"
+        ],
+        tail: "А теперь иди {hobby}! 🎉"
+    },
+    en: {
+        title: "Funny Birthday Card Generator 🎉",
+        name: "Name",
+        adjective: "Adjective (optional)",
+        age: "Age",
+        hobby: "Hobby (optional)",
+        lucky: "🎲 Lucky me",
+        generate: "Generate Card",
+        copy: "Copy Message",
+        leftCard: "A special day for someone amazing!",
+        names: ["Buddy", "Champ", "Star", "Legend", "Hero"],
+        adjectives: ["amazing", "legendary", "brilliant", "fantastic", "glorious"],
+        hobbies: ["eat cake", "dance", "party", "celebrate", "have fun"],
+        ages: [18, 21, 25, 30, 35, 40, 50, 99],
+        messages: [
+            "Happy Birthday, you {adj} {name}! {age} years of awesomeness!",
+            "{name}, you are truly {adj}! {age} looks great on you!",
+            "Another year older, another year more {adj}! Happy {age}!",
+            "Happy Birthday to the most {adj} person ever!",
+            "{name}, you're {age} and still incredibly {adj}!"
+        ],
+        tail: "Now go {hobby}! 🎉"
+    }
+};
+
+let lang = "ru";
+
+const form = document.getElementById('birthdayForm');
+const card = document.getElementById('card');
+const cardMessage = document.getElementById('cardMessage');
+const copyButton = document.getElementById('copyButton');
+const luckyButton = document.getElementById('luckyButton');
+
+function pick(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function setLang(l) {
+    lang = l;
+    const t = translations[l];
+
+    document.getElementById("title").innerText = t.title;
+    document.getElementById("name").placeholder = t.name;
+    document.getElementById("adjective").placeholder = t.adjective;
+    document.getElementById("age").placeholder = t.age;
+    document.getElementById("hobby").placeholder = t.hobby;
+    luckyButton.innerText = t.lucky;
+    document.getElementById("generateButton").innerText = t.generate;
+    copyButton.innerText = t.copy;
+    document.getElementById("cardLeftText").innerText = t.leftCard;
+}
+
+setLang("ru");
+
+luckyButton.addEventListener("click", () => {
+    const t = translations[lang];
+    nameInput.value = pick(t.names);
+    adjectiveInput.value = pick(t.adjectives);
+    ageInput.value = pick(t.ages);
+    hobbyInput.value = pick(t.hobbies);
+});
+
+form.addEventListener("submit", e => {
+    e.preventDefault();
+    const t = translations[lang];
+
+    let n = nameInput.value.trim() || pick(t.names);
+    let a = adjectiveInput.value.trim() || pick(t.adjectives);
+    let ag = ageInput.value.trim() || pick(t.ages);
+    let h = hobbyInput.value.trim() || pick(t.hobbies);
+
+
+    let msg = pick(t.messages)
+        .replace("{name}", n)
+        .replace("{adj}", a)
+        .replace("{age}", ag);
+
+    msg += " " + t.tail.replace("{hobby}", h);
+
+    card.style.display = "flex";
+    cardMessage.innerText = msg;
+});
+
+copyButton.addEventListener("click", () => {
+    navigator.clipboard.writeText(cardMessage.innerText);
+    copyButton.innerText = "✔";
+    setTimeout(() => copyButton.innerText = translations[lang].copy, 1200);
+});
+</script>
+
+</body>
+</html>
