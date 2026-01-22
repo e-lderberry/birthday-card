@@ -98,7 +98,7 @@
         box-sizing: border-box;
     }
 
-    .card-left {
+    /* .card-left {
         background: #ffe6e6;
         border-right: 2px solid #ffb4a2;
         display: flex;
@@ -108,7 +108,20 @@
         color: #ff6f61;
         font-size: 1.4rem;
         text-align: center;
+    } */
+
+    .card-left {
+    background: #ffe6e6;
+    border-right: 2px solid #ffb4a2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    font-style: italic;
+    text-align: center;
     }
+
 
     .card-right {
         display: flex;
@@ -151,9 +164,11 @@
     </form>
 
     <div class="card" id="card">
-        <div class="card-left" id="cardLeftText"></div>
+        <div class="card-left">
+        <img src="cake_icon.jpg" class="cake-icon">
+        <div id="cardLeftText"></div>
+</div>
         <div class="card-right">
-            <img src="cake_icon.jpg" class="cake-icon">
             <div id="cardMessage"></div>
             <button id="copyButton" class="secondary"></button>
         </div>
