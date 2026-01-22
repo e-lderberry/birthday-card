@@ -8,11 +8,26 @@
     body {
         margin: 0;
         font-family: 'Comic Sans MS', cursive, sans-serif;
-        background: #fff8f0;
+        background: #ffe5f0;
         display: flex;
         flex-direction: column;
         align-items: center;
         padding: 40px 20px;
+    }
+
+    /* Confetti dots background */
+    body::before {
+        content: '';
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        background-image: radial-gradient(#ff6347 10%, transparent 10%),
+                          radial-gradient(#ffde59 10%, transparent 10%),
+                          radial-gradient(#6a5acd 10%, transparent 10%),
+                          radial-gradient(#3cb371 10%, transparent 10%);
+        background-size: 50px 50px;
+        background-position: 0 0, 25px 25px, 10px 40px, 40px 10px;
+        z-index: -1;
     }
 
     h1 {
@@ -98,18 +113,6 @@
         box-sizing: border-box;
     }
 
-    /* .card-left {
-        background: #ffe6e6;
-        border-right: 2px solid #ffb4a2;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-style: italic;
-        color: #ff6f61;
-        font-size: 1.4rem;
-        text-align: center;
-    } */
-
     .card-left {
     background: #ffe6e6;
     border-right: 2px solid #ffb4a2;
@@ -119,6 +122,8 @@
     align-items: center;
     gap: 15px;
     font-style: italic;
+    color: #ff6f61;
+    font-size: 1.4rem;
     text-align: center;
     }
 
@@ -165,7 +170,7 @@
 
     <div class="card" id="card">
         <div class="card-left">
-        <img src="cake_icon.jpg" class="cake-icon">
+        <img src="./cake_img.png" class="cake-icon">
         <div id="cardLeftText"></div>
 </div>
         <div class="card-right">
