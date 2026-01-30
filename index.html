@@ -276,6 +276,7 @@ luckyButton.addEventListener("click", () => {
 });
 
 async function generateFromLLM(payload) {
+    alert("CALLING LLM BACKEND");
     const response = await fetch(`${BACKEND_URL}/generate`, {
         method: "POST",
         headers: {
