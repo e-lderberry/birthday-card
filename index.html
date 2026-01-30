@@ -309,13 +309,8 @@ form.addEventListener("submit", async e => {
     card.style.display = "flex";
     cardMessage.innerText = "🎂 Generating birthday magic…";
 
-    try {
-        const text = await generateFromLLM(payload);
-        cardMessage.innerText = text;
-    } catch (err) {
-        cardMessage.innerText = "⚠️ AI is waking up. Try again!";
-        console.error(err);
-    }
+    const text = await generateFromLLM(payload);
+    cardMessage.innerText = text;
 });
 
 
