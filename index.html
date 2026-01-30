@@ -181,7 +181,8 @@
 </div>
 
 <script>
-    
+
+const BACKEND_URL = "https://birthday-llm-backend-production.up.railway.app";
 const nameInput = document.getElementById("name");
 const adjectiveInput = document.getElementById("adjective");
 const ageInput = document.getElementById("age");
@@ -273,32 +274,72 @@ luckyButton.addEventListener("click", () => {
     hobbyInput.value = pick(t.hobbies);
 });
 
-form.addEventListener("submit", e => {
+async function generateFromLLM(payload) {
+    const response = await fetch(`${BACKEND_URL}/generate`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+        throw new Error("LLM request failed");
+    }
+
+    const data = await response.json();
+    return data.message;
+}
+
+
+form.addEventListener("submit", async e => {
     e.preventDefault();
     const t = translations[lang];
 
-    let n = nameInput.value.trim() || pick(t.names);
-    let a = adjectiveInput.value.trim() || pick(t.adjectives);
-    let ag = ageInput.value.trim() || pick(t.ages);
-    let h = hobbyInput.value.trim() || pick(t.hobbies);
-
-
-    let msg = pick(t.messages)
-        .replace("{name}", n)
-        .replace("{adj}", a)
-        .replace("{age}", ag);
-
-    msg += " " + t.tail.replace("{hobby}", h);
+    const payload = {
+        name: nameInput.value.trim() || pick(t.names),
+        adjective: adjectiveInput.value.trim() || pick(t.adjectives),
+        age: ageInput.value.trim() || pick(t.ages),
+        hobby: hobbyInput.value.trim() || pick(t.hobbies),
+        lang: lang
+    };
 
     card.style.display = "flex";
-    cardMessage.innerText = msg;
+    cardMessage.innerText = "🎂 Generating birthday magic…";
+
+    try {
+        const text = await generateFromLLM(payload);
+        cardMessage.innerText = text;
+    } catch (err) {
+        cardMessage.innerText = "⚠️ AI is waking up. Try again!";
+        console.error(err);
+    }
 });
+
 
 copyButton.addEventListener("click", () => {
     navigator.clipboard.writeText(cardMessage.innerText);
     copyButton.innerText = "✔";
     setTimeout(() => copyButton.innerText = translations[lang].copy, 1200);
 });
+
+async function generateFromLLM(data) {
+  const response = await fetch(`${BACKEND_URL}/generate`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  });
+
+  if (!response.ok) {
+    throw new Error("LLM request failed");
+  }
+
+  const result = await response.json();
+  return result.text;
+}
+
 </script>
 
 </body>
